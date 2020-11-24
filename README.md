@@ -11,6 +11,7 @@ This project uses Python `3.8`. To install the dependencies you need `pipenv` wh
 Then install the dependencies with
 
     pipenv --python 3.8
+    pipenv shell
     pipenv install --dev
 
 
