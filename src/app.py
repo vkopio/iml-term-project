@@ -1,6 +1,6 @@
-import numpy
+import numpy as np
 
 def app():
-    print(numpy.pi)
+    print(np.pi)
 
     return 'Hello, World!'
