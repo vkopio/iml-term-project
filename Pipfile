@@ -7,8 +7,9 @@ verify_ssl = true
 coverage = "*"
 
 [packages]
-scipy = "*"
+pandas = "*"
 scikit-learn = "*"
+scipy = "*"
 
 [requires]
 python_version = "3.8"
