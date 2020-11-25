@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-
+import sklearn.feature_selection
+from sklearn.linear_model import *
+from sklearn.metrics import roc_auc_score
 
 npf_train = pd.read_csv("data/npf_train.csv")
 npf_test = pd.read_csv("data/npf_test_hidden.csv")
@@ -23,6 +25,28 @@ def preprosessing(npf):
 
     return npf
 
+def linReg(X_train, y_train, X_test, y_test):
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    return model.score(X_test, y_test), model
+
+def logReg(X_train, y_train, X_test, y_test):
+    model = LogisticRegression()
+    model.fit(X_train,y_train)
+    y_hat = [x[1] for x in model.predict_proba(X_test)]
+    
+    #return roc_auc_score(y_test, y_hat) 
+    return model.score(X_test, y_test), model
+
+def best_feature_columns(X_train, y_train, n):
+    '''Return n best feature columns'''
+    select = sklearn.feature_selection.SelectKBest(k=20)
+    selected_features = select.fit(X_train, y_train)
+    indices_selected = selected_features.get_support(indices=True)
+    colnames_selected = [X_train.columns[i] for i in indices_selected]
+
+    return colnames_selected
+
     
 
 def app():
@@ -32,7 +56,44 @@ def app():
     y_class2 = npf['class2']
     y_class4 = npf[['Ia','Ib','II','nonevent']]
 
+    # Test and training sets for binary classification
     X_train, X_test, y_class2_train, y_class2_test = train_test_split(X, y_class2, train_size=0.8, random_state=1)
+    
+
+    ### Testing ###
+
+    print(linReg(X_train, y_class2_train, X_test, y_class2_test))
+    print(logReg(X_train, y_class2_train, X_test, y_class2_test))
+
+    # Dropping stds
+
+    X_means = X.drop([c for c in X.columns if 'std' in c],axis=1)
+    X_train, X_test, y_class2_train, y_class2_test = train_test_split(X_means, y_class2, train_size=0.8, random_state=1)
+    print(linReg(X_train, y_class2_train, X_test, y_class2_test))
+    print(logReg(X_train, y_class2_train, X_test, y_class2_test))
+
+
+
+
+
+
+
+
+    
+    # Selecting 20 best features
+    colnames_selected = best_feature_columns(X_train, y_class2_train, 20)
+    X_train_selected = X_train[colnames_selected]
+    X_test_selected = X_test[colnames_selected]
+
+
+    
+
 
 
     return 'Hello, World!'
+
+# Models which could be tested
+#   - Linear regression
+#   - Lasso regression
+#   - SVM
+#   
