@@ -30,3 +30,11 @@ After the virtualenv is activated simply use the commands from `Makefile`
 Test can be run with
 
     make test
+
+## Notebook setup with virtualenv
+
+To get Jupyter lab to use the virtualenv you need to register it first by running the following:
+
+    pipenv shell
+    pip install ipykernel
+    python -m ipykernel install --user --name=iml-term-project
