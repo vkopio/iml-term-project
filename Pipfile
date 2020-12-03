@@ -12,6 +12,8 @@ pandas = "*"
 scikit-learn = "*"
 scipy = "*"
 sklearn = "*"
+seaborn = "*"
+jinja2 = "*"
 
 [requires]
 python_version = "3.8"
