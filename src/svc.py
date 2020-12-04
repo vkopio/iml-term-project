@@ -61,7 +61,7 @@ y_test = npft.iloc[:,-1]
 clf = SVC(C=c, probability=True)
 clf.fit(x, y)
 
-logreg = LogisticRegression()
+logreg = LogisticRegression(max_iter=200)
 logreg.fit(x, npf_train['class4'])
 
 binary_class_predictions = np.array(clf.predict_proba(x_test)[:,1])
