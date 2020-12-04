@@ -5,6 +5,7 @@ import sklearn.feature_selection
 from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import scale
 from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
 
 def preprocess(npf):
     # Binary variable for event vs nonevent
@@ -60,4 +61,16 @@ y_test = npft.iloc[:,-1]
 clf = SVC(C=c, probability=True)
 clf.fit(x, y)
 
-print(clf.predict_proba(x_test))
+logreg = LogisticRegression()
+logreg.fit(x, npf_train['class4'])
+
+binary_class_predictions = np.array(clf.predict_proba(x_test)[:,1])
+multi_class_predictions = np.array(logreg.predict(x_test))
+
+np.savetxt(
+  "data/answers.csv", 
+  np.column_stack((multi_class_predictions, binary_class_predictions)), 
+  delimiter=',',
+  header="class4,p",
+  fmt="%s,%f"
+)
